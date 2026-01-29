@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JKT48 Memories - Forever Young</title>
+    
+    <!-- Font: Open Sans & Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@300;500;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Icon Library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- RESET --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%; height: 100%;
+            font-family: 'Open Sans', sans-serif;
+            overflow: hidden;
+            background-color: #1a1a2e;
+        }
+
+        /* --- 1. DYNAMIC BACKGROUND --- */
+        .animated-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(120deg, #0f0c29, #302b63, #ff9a9e, #fad0c4);
+            background-size: 300% 300%;
+            animation: gradientMove 20s ease infinite;
+            z-index: -3;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* --- 2. MEMORY LAYOUT (PHOTOS) --- */
+        #memory-wall {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .photo-item {
+            position: absolute;
+            background: #fff;
+            padding: 6px 6px 25px 6px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: all 0.5s ease;
+            animation: floatMemories 10s ease-in-out infinite alternate;
+            opacity: 0.6; 
+        }
+
+        .photo-item img {
+            width: 100%; height: auto;
+            filter: sepia(0.4) contrast(1.05);
+            display: block;
+        }
+
+        .caption {
+            position: absolute; bottom: 6px; left: 0;
+            width: 100%; text-align: center;
+            font-family: 'Dancing Script', cursive;
+            color: #333; font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        /* Dekorasi */
+        .decoration {
+            position: absolute; color: rgba(255, 255, 255, 0.4);
+            z-index: 0; animation: floatDecor 12s infinite linear;
+        }
+        
+        .floating-text {
+            position: absolute;
+            font-family: 'Dancing Script', cursive;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 2.5rem; z-index: 0;
+            pointer-events: none;
+            animation: textFloat 25s infinite linear;
+        }
+
+        @keyframes floatMemories {
+            0% { transform: translateY(0px) rotate(var(--rot)); }
+            100% { transform: translateY(-10px) rotate(var(--rot)); }
+        }
+        @keyframes floatDecor {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-15px) rotate(5deg); }
+        }
+        @keyframes textFloat {
+            0% { transform: translateY(0) rotate(var(--tr)); }
+            100% { transform: translateY(-30px) rotate(var(--tr)); }
+        }
+
+        /* --- 3. CENTRAL QUOTE (SCROLLABLE) --- */
+        .center-content {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+            width: 90%; 
+            max-width: 900px;
+            height: 85vh; 
+            display: flex;
+            justify-content: center;
+            /* Tambah position relative supaya elemen anak (bebek/bola) mengikuti dia */
+            position: relative; 
+        }
+
+        .quote-box {
+            background: rgba(20, 20, 40, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            
+            border-radius: 25px;
+            padding: 45px;
+            width: 100%;
+            height: 100%;
+            color: #fff;
+            
+            overflow-y: auto;
+            overflow-x: hidden;
+            text-align: justify;
+        }
+
+        /* Scrollbar */
+        .quote-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        .quote-box::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .quote-box::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 105, 180, 0.5);
+            border-radius: 10px;
+        }
+
+        /* Typography */
+        .main-quote {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-weight: 400;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            color: #f0f0f0;
+        }
+
+        .main-quote span {
+            color: #ffb7b2;
+            font-weight: 600;
+        }
+
+        .sub-quote {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: #ffb7b2;
+            text-align: center;
+        }
+
+        /* --- 4. START OVERLAY --- */
+        #start-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: opacity 1s ease;
+        }
+
+        #start-overlay h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        #start-overlay h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #ff69b4;
+        }
+
+        #start-overlay p {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 0.85rem;
+            opacity: 0.6;
+            max-width: 260px;
+            text-align: center;
+            line-height:1.6;
+        }
+
+        /* --- RESPONSIVE MOBILE (BOX TRANSPARAN & FOTO NYEBAR) --- */
+        @media (max-width: 768px) {
+            /* Kotak Teks */
+            .center-content {
+                width: 80%; 
+                height: 70vh;
+            }
+
+            .quote-box {
+                padding: 25px 20px;
+                border-radius: 20px;
+                
+                /* Ubah Transparansi & Blur Sesuai Request */
+                background: rgba(10, 10, 25, 0.5); /* Lebih transparan */
+                backdrop-filter: blur(5px); /* Blur dikurangi */
+            }
+
+            .main-quote {
+                font-size: 1rem; 
+                line-height: 1.7;
+                margin-bottom: 16px;
+                text-shadow: 0 2px 4px rgba(0,0,0,1); 
+            }
+
+            /* Foto Latar (Portrait Mode) */
+            .photo-item {
+                width: 70px; 
+                opacity: 0.6; 
+                filter: blur(0px); 
+                padding: 4px 4px 18px 4px;
+            }
+            
+            .caption {
+                font-size: 0.5rem;
+                bottom: 4px;
+            }
+
+            .floating-text {
+                font-size: 1.5rem;
+                opacity: 0.05; 
+            }
+            
+            #start-overlay h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* --- TAMBAHAN KHUSUS HP LANDSCAPE (MIRING) --- */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .photo-item {
+                width: 60px !important; 
+                padding: 2px 2px 10px 2px;
+            }
+            
+            .caption {
+                font-size: 0.3rem;
+                bottom: 2px;
+            }
+
+            .center-content {
+                width: 70%;
+                height: 90vh;
+            }
+
+            .main-quote {
+                font-size: 0.95rem;
+            }
+
+            .quote-box {
+                background: rgba(10, 10, 25, 0.5);
+                backdrop-filter: blur(5px);
+            }
+        }
+
+        /* --- TAMBAHAN DESIGN BARU (BEBEK & BOLA) --- */
+        
+        /* 1. Bebek Lucu: PAS DI ATAS GARIS BOX KANAN */
+        .duck-container {
+            position: absolute;
+            /* Posisi: Naik ke atas kotak (-55px) supaya tidak nutupin teks */
+            top: -55px; 
+            right: 20px; /* Posisi kanan */
+            
+            z-index: 105; /* Di atas kotak */
+            cursor: grab;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4)); 
+            animation: waddle 2s infinite ease-in-out;
+            transform: rotate(-5deg);
+        }
+
+        .cute-duck-img {
+            width: 60px; /* Ukuran bebek */
+            height: auto;
+        }
+
+        @keyframes waddle {
+            0%, 100% { transform: rotate(-5deg) translateY(0); }
+            50% { transform: rotate(0deg) translateY(-5px); } /* Menggeleng lucu */
+        }
+
+        /* 2. Bola Warna ATAS AGAK TENGAH */
+        .bola-container {
+            position: absolute;
+            /* Posisi: Di atas garis kotak (-25px), Horisontal Tengah (50%) */
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%); /* Fix agar benar-benar di tengah */
+            
+            z-index: 150;
+            display: flex;
+            gap: 12px;
+            flex-direction: row; /* Susun mendatar biar pas di tengah atas */
+        }
+
+        .bola {
+            width: 18px; 
+            height: 18px;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            animation: floatBola 3s infinite ease-in-out;
+        }
+
+        .bola.kuning { background-color: #ffd700; } /* Kuning */
+        .bola.ungu { background-color: #9b59b6; animation-delay: 0.5s; } /* Ungu */
+        .bola.biru { background-color: #3498db; animation-delay: 1s; } /* Biru */
+
+        @keyframes floatBola {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Musik Latar -->
+    <audio id="bg-music" loop>
+        <source src="song.mpeg" type="audio/mpeg">
+    </audio>
+
+    <!-- Layar Start -->
+    <div id="start-overlay" onclick="startExperience()">
+        <h3>Klik Tombol</h3>
+        <h2>HUBUNGAN PARASOCIAL</h2>
+        <p>(Ketika Oshi menjadi alasan untuk "BERTAHAN")</p>
+    </div>
+
+    <!-- Background -->
+    <div class="animated-bg"></div>
+
+    <!-- Area Foto & Dekorasi -->
+    <div id="memory-wall"></div>
+
+    <!-- Konten Tengah -->
+    <div class="center-content">
+        <!-- DESIGN BARU: Bebek & Bola (DIPINDAHKAN KE DALAM center-content) -->
+        <div class="duck-container">
+            <!-- Ikon Bebek Kuning Lucu -->
+            <img src="https://img.icons8.com/color/96/rubber-duck.png" alt="Bebek Lucu" class="cute-duck-img">
+        </div>
+
+        <div class="bola-container">
+            <div class="bola kuning"></div>
+            <div class="bola ungu"></div>
+            <div class="bola biru"></div>
+        </div>
+
+        <div class="quote-box">
+            <p class="main-quote">
+                Hubungan parasocial sering dianggap negatif sebagai bentuk obsesi atau sekedar <span>"HALU"</span>. Padahal, secara psikologis, merasa punya ikatan emosional dengan idola adalah fenomena yang normal.
+            </p>
+            
+            <p class="main-quote">
+                Meski satu arah, kedekatan yang dirasakan itu <span>TETAP TERASA NYATA DI HATI</span> para penggemar. Berbeda dengan hubungan nyata yang penuh risiko penolakan, hubungan dengan idola memberikan rasa aman dan diterima.
+            </p>
+
+            <p class="main-quote">
+                Member menjadi sumber kekuatan yang selalu ada untuk menyemangati fans melalui layar ponsel. Mereka memberikan energi positif saat kehidupan nyata terasa terlalu berat untuk dihadapi.
+            </p>
+
+            <p class="main-quote">
+                Hubungan parasocial hadir sebagai penyelamat. Saat seseorang berada di titik terendah dan merasa putus asa, mereka butuh sesuatu untuk dijadikan pegangan.
+            </p>
+
+            <p class="main-quote">
+                Keinginan melihat Oshi tampil, mendengar mereka tertawa di live, atau sekadar menunggu update terbaru, bisa menjadi alasan kuat untuk tetap semangat menjalani hari.
+            </p>
+
+            <p class="main-quote">
+                Dunia idola sering kali menjadi satu-satunya tempat aman bagi mereka yang sedang berjuang melawan depresi.
+            </p>
+
+            <p class="main-quote">
+                Hubungan ini memberikan rutinitas yang positif: ada jadwal yang dinanti, ada komunitas yang sefrekuensi, dan ada sosok idola yang memberi cahaya di tengah rasa sepi.
+            </p>
+
+            <p class="main-quote">
+                Banyak fans yang mengaku batal menyerah setelah melihat perjuangan Oshi-nya. Lewat hubungan ini, mereka bisa menyerap energi positif dan merasa tidak sendirian saat sedang kesulitan.
+            </p>
+
+            <p class="main-quote">
+                Muncul sebuah tekad: <span>"Kalau Oshi-ku saja tidak menyerah mengejar mimpinya, aku juga tidak boleh menyerah pada hidupku."</span>
+            </p>
+
+            <p class="main-quote">
+                Mencari pegangan pada sosok Oshi adalah bukti perjuanganmu yang luar biasa untuk tetap ada. Jangan biarkan orang lain meremahkan cara kamu mencari cahaya. Hubungan parasocial ini valid, perasaanmu valid, dan keberadaanmu sangat berharga. <span>TERIMAKASIH KARENA SUDAH MEMILIH UNTUK BERTAHAN HINGGA HARI INI.</span>
+            </p>
+
+            <div class="sub-quote">
+                — INSIGHT48 | Lebih Dari Sekedar Ngidol —
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA FOTO (List Foto Kamu) ---
+        const photos = [
+            "jkt48.mpeg",
+            "JKTCYNTYIA.jpeg",
+            "1.jpeg",
+            "2.jpeg",
+            "3.jpeg",
+            "5.jpeg",
+            "6.jpeg",
+            "7.jpeg",
+            "8.jpeg",
+            "9.jpeg",
+            "10.jpeg",
+            "erinee.jpeg",
+            "erine.jpeg"
+        ];
+
+        const decorations = [
+            'fa-heart', 'fa-heart', 'fa-heart', 
+            'fa-spa', 'fa-spa', 
+            'fa-leaf', 
+            'fa-star', 'fa-star'
+        ];
+
+        const wall = document.getElementById('memory-wall');
+
+        function createMemoryWall() {
+            photos.forEach((url) => {
+                const item = document.createElement('div');
+                item.className = 'photo-item';
+                
+                // Variasi Ukuran
+                const scale = 0.7 + Math.random() * 0.5; 
+                item.style.width = (140 * scale) + 'px';
+
+                // SEBARAN FOTO DIBUAT LEBAR
+                const posX = Math.random() * 95; 
+                const posY = Math.random() * 95;
+                const rotation = (Math.random() * 40 - 20).toFixed(1);
+                const zIndex = Math.floor(Math.random() * 10);
+
+                item.style.left = posX + '%';
+                item.style.top = posY + '%';
+                item.style.transform = `rotate(${rotation}deg)`;
+                item.style.zIndex = zIndex;
+                item.style.setProperty('--rot', `${rotation}deg`);
+                item.style.animationDelay = (Math.random() * 5) + 's';
+
+                item.innerHTML = `
+                    <img src="${url}" alt="Memory">
+                    <div class="caption">JKT48</div>
+                `;
+                wall.appendChild(item);
+                
+                if(Math.random() > 0.5) {
+                    addDecoration(posX, posY, zIndex);
+                }
+            });
+
+            createFloatingText("Forever", 5, 10);
+            createFloatingText("Young", 85, 80);
+            createFloatingText("Love", 10, 85);
+            createFloatingText("Dream", 80, 5);
+        }
+
+        function addDecoration(x, y, zIndex) {
+            const dec = document.createElement('i');
+            const type = decorations[Math.floor(Math.random() * decorations.length)];
+            dec.className = `fas ${type} decoration`;
+            const offsetX = (Math.random() - 0.5) * 10; 
+            const offsetY = (Math.random() - 0.5) * 10;
+            const size = 8 + Math.random() * 15; 
+            dec.style.left = `calc(${x}% + ${offsetX}%)`;
+            dec.style.top = `calc(${y}% + ${offsetY}%)`;
+            dec.style.fontSize = `${size}px`;
+            dec.style.zIndex = zIndex + 1;
+            dec.style.color = Math.random() > 0.5 ? '#ff9a9e' : '#fff';
+            wall.appendChild(dec);
+        }
+
+        function createFloatingText(text, x, y) {
+            const el = document.createElement('div');
+            el.className = 'floating-text';
+            el.innerText = text;
+            el.style.left = x + '%';
+            el.style.top = y + '%';
+            el.style.setProperty('--tr', (Math.random() * 20 - 10) + 'deg');
+            wall.appendChild(el);
+        }
+
+        function startExperience() {
+            const audio = document.getElementById('bg-music');
+            const overlay = document.getElementById('start-overlay');
+            audio.volume = 0.6;
+            audio.play().catch(e => console.log("Audio error:", e));
+            overlay.style.opacity = 0;
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 1000);
+        }
+
+        createMemoryWall();
+    </script>
+</body>
+</html>
