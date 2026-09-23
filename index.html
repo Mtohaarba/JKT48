@@ -407,7 +407,7 @@
         .bola.pink   { background: radial-gradient(circle at 32% 28%, #ffe0ea, #ff5f8f); box-shadow: 0 4px 10px rgba(0,0,0,.35), 0 0 12px rgba(255,95,143,.6); }
         @keyframes sway { 0%,100% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } }
 
-        /* ============ 8. ALBUM FOTO (POJOK KANAN ATAS) ============ */
+        /* ============ 7. ALBUM FOTO (POJOK KANAN ATAS) ============ */
         #album-btn {
             position: fixed; top: 18px; right: 18px; z-index: 500;
             display: flex; align-items: center; gap: 8px;
@@ -440,8 +440,8 @@
 
         #album-panel {
             position: fixed; top: 0; right: 0; bottom: 0; z-index: 901;
-            width: min(380px, 88vw); max-width: 420px;
-            background: linear-gradient(165deg, rgba(26,19,54,.92), rgba(14,10,32,.95));
+            width: min(400px, 92vw);
+            background: linear-gradient(165deg, rgba(26,19,54,.94), rgba(14,10,32,.96));
             border-left: 1px solid var(--line);
             box-shadow: -24px 0 60px rgba(0,0,0,.5);
             display: flex; flex-direction: column;
@@ -452,7 +452,8 @@
 
         .album-head {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 22px 20px 16px; border-bottom: 1px solid var(--line);
+            padding: 20px 20px 14px; border-bottom: 1px solid var(--line);
+            flex-shrink: 0;
         }
         .album-head h2 {
             font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.25rem;
@@ -467,32 +468,73 @@
         }
         .album-close:hover { background: rgba(255,143,171,.2); transform: rotate(90deg); }
 
+        /* ---- GRID ALBUM: RAPI & SERAGAM ---- */
         .album-grid {
-            flex: 1; overflow-y: auto; padding: 18px;
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+            flex: 1; overflow-y: auto;
+            padding: 14px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);   /* Laptop: 2 kolom rapi */
+            gap: 10px;                               /* Jarak antar foto selalu sama */
             align-content: start;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,143,171,.5) transparent;
         }
         .album-grid::-webkit-scrollbar { width: 6px; }
-        .album-grid::-webkit-scrollbar-thumb { background: rgba(255,143,171,.4); border-radius: 99px; }
+        .album-grid::-webkit-scrollbar-thumb { background: rgba(255,143,171,.45); border-radius: 99px; }
 
+        /* Semua foto dipaksa kotak persegi, ukurannya sama persis */
         .album-thumb {
-            position: relative; border-radius: 10px; overflow: hidden;
-            aspect-ratio: 1/1; cursor: pointer; border: 1px solid rgba(255,255,255,.08);
-            transition: transform .25s ease, border-color .25s ease;
+            position: relative;
+            aspect-ratio: 1 / 1;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,.10);
+            background: rgba(255,255,255,.07);   /* Placeholder sebelum foto termuat */
+            box-shadow: 0 4px 12px rgba(0,0,0,.35);
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
         }
-        .album-thumb:hover { transform: translateY(-3px); border-color: rgba(255,143,171,.5); }
+        .album-thumb:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255,143,171,.55);
+            box-shadow: 0 10px 22px rgba(0,0,0,.45);
+        }
         .album-thumb img {
-            width: 100%; height: 100%; object-fit: cover; display: block;
-            filter: sepia(.12) contrast(1.05) saturate(1.05);
+            width: 100%; height: 100%;
+            object-fit: cover;        /* Foto ter-crop rapi, tidak gepeng/melebar */
+            display: block;
+            filter: sepia(.10) contrast(1.04) saturate(1.05);
+            transition: transform .4s ease;
         }
+        .album-thumb:hover img { transform: scale(1.07); }
+
+        /* Caption: selalu 1 baris, kepanjangan otomatis jadi "..." */
         .album-thumb span {
             position: absolute; bottom: 0; left: 0; right: 0;
-            padding: 5px 8px 4px; font-size: .62rem; text-align: center;
+            padding: 20px 8px 6px;
+            font-size: .68rem; text-align: center;
             font-family: 'Dancing Script', cursive; font-weight: 700; color: #fff;
-            background: linear-gradient(0deg, rgba(0,0,0,.65), transparent);
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            background: linear-gradient(0deg, rgba(0,0,0,.72) 0%, rgba(0,0,0,.28) 55%, transparent 100%);
+            pointer-events: none;
         }
 
-        /* Lightbox saat satu foto album dibuka penuh */
+        /* Fallback browser lama yang tidak mendukung aspect-ratio */
+        @supports not (aspect-ratio: 1 / 1) {
+            .album-thumb::before { content: ""; display: block; padding-top: 100%; }
+            .album-thumb img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+            .album-thumb span { position: absolute; }
+        }
+
+        /* ---- HP: 3 kolom seperti grid Instagram ---- */
+        @media (max-width: 768px) {
+            #album-panel { width: 100vw; max-width: 100vw; }
+            .album-grid { grid-template-columns: repeat(3, 1fr); gap: 7px; padding: 10px; }
+            .album-thumb { border-radius: 9px; }
+            .album-thumb span { font-size: .58rem; padding: 14px 4px 4px; }
+        }
+
+        /* ============ 8. LIGHTBOX (foto penuh dari album) ============ */
         #lightbox {
             position: fixed; inset: 0; z-index: 950;
             display: flex; align-items: center; justify-content: center;
@@ -517,7 +559,7 @@
         .lightbox-nav.prev { left: 16px; top: 50%; transform: translateY(-50%); }
         .lightbox-nav.next { right: 16px; top: 50%; transform: translateY(-50%); }
 
-        /* ============ 7. RESPONSIVE ============ */
+        /* ============ 9. RESPONSIVE ============ */
         @media (max-width: 768px) {
             .center-content { width: 88%; height: 76vh; height: 74dvh; }
             .quote-box {
@@ -537,8 +579,6 @@
             #album-btn { top: 12px; right: 12px; padding: 8px 12px 8px 10px; font-size: 0; gap: 0; }
             #album-btn i.fa-images { font-size: 1rem; }
             #album-btn .album-count { margin-left: 2px; font-size: 0; min-width: 8px; height: 8px; }
-            #album-panel { width: 100vw; max-width: 100vw; }
-            .album-grid { grid-template-columns: repeat(3, 1fr); }
             .lightbox-nav { width: 36px; height: 36px; }
         }
 
@@ -644,7 +684,7 @@
             </div>
         </div>
 
-        <!-- Bebek (bisa diklik!) -->
+        <!-- Bebek lucu (bisa diklik!) -->
         <div class="duck-container" id="duck">
             <span class="bubble" id="bubble">Kwek!</span>
             <img src="https://img.icons8.com/color/96/rubber-duck.png" alt="Bebek Lucu">
@@ -677,7 +717,7 @@
         <div id="album-panel">
             <div class="album-head">
                 <h2>Album Kenangan</h2>
-                albumClose" <div class="album-close" id="aria-label="Tutup album"><i class="fas fa-times"></i></div>
+                <div class="album-close" id="albumClose" aria-label="Tutup album"><i class="fas fa-times"></i></div>
             </div>
             <div class="album-grid" id="albumGrid"></div>
         </div>
@@ -709,14 +749,15 @@
 
     <script>
         /* ================= DATA ================= */
+        // CATATAN: "10.jpeg" muncul 2x di daftar asli — hapus salah satu kalau tidak sengaja dobel
         const photos = [
             "jkt48.jpeg",
             "JKTCYNTIA.jpeg",
             "1.jpeg", "2.jpeg", "3.jpeg","4.jpeg", "5.jpeg", "6.jpeg",
             "7.jpeg", "8.jpeg", "9.jpeg", "10.jpeg",
-            "erinee.jpeg", "erine.jpeg"
+            "erinee.jpeg", "erine.jpeg", "10.jpeg", "11.jpeg", "12.jpeg", "13.jpeg", "14.jpeg", "15.jpeg", "16.jpeg", "17.jpeg", "18.jpeg", "19.jpeg", "20.jpeg", "21.jpeg", "22.jpeg", "23.jpeg", "24.jpeg", "25.jpeg", "26.jpeg", "27.jpeg", "28.jpeg", "29.jpeg", "30.jpeg"
         ];
-        const captions   = ["JKT48", "Cynthia", "My Oshi", "MY Bini", "♡", "MY Mine Gueh"];
+        const captions   = ["JKT48", "Cyinthia", "My Oshi", "MY Bini", "MY Mine Gueh", "Erine", "Catherina", "♡"];
         const decorations = ['fa-heart','fa-heart','fa-star','fa-music','fa-spa','fa-leaf','fa-feather','fa-heart'];
 
         // Zona aman: foto menempel di tepi layar, sebagian "mengintip" dari balik kaca
@@ -853,8 +894,9 @@
             photos.forEach((url, i) => {
                 const thumb = document.createElement('div');
                 thumb.className = 'album-thumb';
-                thumb.innerHTML = `<img src="${url}" alt="Kenangan ${i+1}" loading="lazy">
-                                    <span>${captions[i % captions.length]}</span>`;
+                thumb.innerHTML = `
+                    <img src="${url}" alt="Kenangan ${i+1}" loading="lazy">
+                    <span>${captions[i % captions.length]}</span>`;
                 thumb.addEventListener('click', () => openLightbox(i));
                 albumGrid.appendChild(thumb);
             });
