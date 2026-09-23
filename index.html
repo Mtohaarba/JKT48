@@ -2,344 +2,449 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JKT48 Memories - Catherina Vallencia</title>
-    
-    <!-- Font: Open Sans & Poppins -->
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Poppins:wght@300;500;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0920">
+    <title>JKT48 Memories — Catherina Vallencia</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦆</text></svg>">
+
+    <script>document.documentElement.classList.add('js');</script>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+
     <!-- Icon Library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- RESET --- */
+        /* ============ RESET & TOKEN WARNA ============ */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body, html {
-            width: 100%; height: 100%;
-            font-family: 'Open Sans', sans-serif;
+        :root {
+            --bg1: #0b0920;
+            --pink: #ff8fab;
+            --peach: #ffb7b2;
+            --gold: #ffd86b;
+            --ink: #f2eeff;
+            --line: rgba(255,255,255,.14);
+        }
+
+        html, body { width: 100%; height: 100%; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--ink);
+            background: var(--bg1);
             overflow: hidden;
-            background-color: #1a1a2e;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* --- 1. DYNAMIC BACKGROUND --- */
-        .animated-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(120deg, #0f0c29, #302b63, #ff9a9e, #fad0c4);
-            background-size: 300% 300%;
-            animation: gradientMove 20s ease infinite;
-            z-index: -3;
+        ::selection { background: rgba(255,143,171,.45); }
+
+        /* ============ 1. BACKGROUND DINAMIS ============ */
+        .bg {
+            position: fixed; inset: 0; z-index: -3;
+            background:
+                radial-gradient(1100px 700px at 85% -10%, rgba(255,143,171,.20), transparent 60%),
+                radial-gradient(900px 650px at -10% 110%, rgba(122,92,255,.25), transparent 60%),
+                linear-gradient(120deg, #0b0920, #241d4f, #43275e, #6d3a63, #8a4a5e);
+            background-size: 100% 100%, 100% 100%, 300% 300%;
+            animation: gradMove 26s ease infinite;
+        }
+        @keyframes gradMove {
+            0%   { background-position: 0 0, 0 0, 0% 50%; }
+            50%  { background-position: 0 0, 0 0, 100% 50%; }
+            100% { background-position: 0 0, 0 0, 0% 50%; }
         }
 
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Cahaya aurora lembut */
+        .blob {
+            position: fixed; border-radius: 50%;
+            filter: blur(70px); opacity: .5; z-index: -2; pointer-events: none;
+        }
+        .b1 { width: 46vmax; height: 46vmax; left: -14vmax; top: -14vmax;
+              background: radial-gradient(circle, rgba(255,143,171,.28), transparent 70%);
+              animation: drift1 24s ease-in-out infinite alternate; }
+        .b2 { width: 40vmax; height: 40vmax; right: -12vmax; bottom: -14vmax;
+              background: radial-gradient(circle, rgba(122,92,255,.30), transparent 70%);
+              animation: drift2 30s ease-in-out infinite alternate; }
+        @keyframes drift1 { to { transform: translate(9vmax, 6vmax) scale(1.15); } }
+        @keyframes drift2 { to { transform: translate(-8vmax, -5vmax) scale(1.1); } }
+
+        /* Partikel kunang-kunang (canvas) */
+        #fx { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+        /* Vignette + grain biar cinematic */
+        .vignette {
+            position: fixed; inset: 0; z-index: 5; pointer-events: none;
+            background: radial-gradient(ellipse at center, transparent 58%, rgba(5,4,18,.5) 100%);
+        }
+        .grain {
+            position: fixed; inset: 0; z-index: 210; pointer-events: none; opacity: .045;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='0.55'/></svg>");
         }
 
-        /* --- 2. MEMORY LAYOUT (PHOTOS) --- */
-        #memory-wall {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
-            pointer-events: none;
+        /* Hati kecil melayang naik */
+        .heart-float {
+            position: fixed; bottom: -40px; z-index: 3; pointer-events: none;
+            animation: rise linear infinite;
         }
+        @keyframes rise {
+            0%   { transform: translateY(0) rotate(-10deg); opacity: 0; }
+            12%  { opacity: .55; }
+            85%  { opacity: .3; }
+            100% { transform: translateY(-108vh) rotate(30deg); opacity: 0; }
+        }
+
+        /* ============ 2. DINDING FOTO (POLAROID) ============ */
+        #memory-wall { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
 
         .photo-item {
             position: absolute;
-            background: #fff;
-            padding: 6px 6px 25px 6px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: all 0.5s ease;
-            animation: floatMemories 10s ease-in-out infinite alternate;
-            opacity: 0.6; 
+            width: calc(clamp(84px, 9.5vw, 148px) * var(--ws, 1));
+            background: #fffdf7;
+            padding: 7px 7px 26px;
+            border-radius: 6px;
+            box-shadow: 0 14px 34px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.25);
+            animation: floatMemories 9s ease-in-out infinite alternate;
+            pointer-events: auto;
+            transition: opacity 1s ease var(--d,0s), filter .35s ease, box-shadow .35s ease;
         }
-
+        /* Selotip washi di atas polaroid */
+        .photo-item::before {
+            content: ""; position: absolute; top: -9px; left: 50%;
+            width: 56px; height: 20px; border-radius: 2px;
+            background: linear-gradient(180deg, rgba(255,220,130,.8), rgba(255,200,90,.55));
+            transform: translateX(-50%) rotate(-3deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,.18);
+        }
         .photo-item img {
-            width: 100%; height: auto;
-            filter: sepia(0.4) contrast(1.05);
-            display: block;
+            width: 100%; display: block; border-radius: 3px;
+            aspect-ratio: 4/3; object-fit: cover; background: #eee;
+            filter: sepia(.15) contrast(1.06) saturate(1.05);
+        }
+        .photo-item.tall img { aspect-ratio: 3/4; }
+        .photo-item:hover {
+            filter: brightness(1.06);
+            box-shadow: 0 20px 46px rgba(0,0,0,.55);
+            z-index: 80 !important;
         }
 
         .caption {
-            position: absolute; bottom: 6px; left: 0;
-            width: 100%; text-align: center;
-            font-family: 'Dancing Script', cursive;
-            color: #333; font-size: 0.7rem;
-            opacity: 0.8;
-        }
-
-        /* Dekorasi */
-        .decoration {
-            position: absolute; color: rgba(255, 255, 255, 0.4);
-            z-index: 0; animation: floatDecor 12s infinite linear;
-        }
-        
-        .floating-text {
-            position: absolute;
-            font-family: 'Dancing Script', cursive;
-            color: rgba(255, 255, 255, 0.1);
-            font-size: 2.5rem; z-index: 0;
-            pointer-events: none;
-            animation: textFloat 25s infinite linear;
+            position: absolute; bottom: 5px; left: 0; width: 100%;
+            text-align: center; font-family: 'Dancing Script', cursive;
+            color: #5c4a52; font-size: .72rem;
         }
 
         @keyframes floatMemories {
-            0% { transform: translateY(0px) rotate(var(--rot)); }
-            100% { transform: translateY(-10px) rotate(var(--rot)); }
+            from { transform: translateY(0) rotate(var(--rot, 0deg)); }
+            to   { transform: translateY(-12px) rotate(calc(var(--rot, 0deg) + 2.5deg)); }
         }
+
+        /* Dekorasi ikon & kata melayang */
+        .decoration {
+            position: absolute; z-index: 3; pointer-events: none; opacity: .8;
+            animation: floatDecor 10s ease-in-out infinite alternate;
+        }
+        .floating-text {
+            position: absolute; z-index: 1; pointer-events: none; white-space: nowrap;
+            font-family: 'Dancing Script', cursive;
+            color: rgba(255,255,255,.09);
+            font-size: clamp(1.6rem, 4vw, 2.6rem);
+            animation: textFloat 24s ease-in-out infinite alternate;
+        }
+        .floating-text.big { font-size: clamp(3rem, 8vw, 5rem); color: rgba(255,255,255,.05); }
+
         @keyframes floatDecor {
-            0% { transform: translateY(0) rotate(0deg); }
-            100% { transform: translateY(-15px) rotate(5deg); }
+            from { transform: translateY(0) rotate(0deg); }
+            to   { transform: translateY(-14px) rotate(6deg); }
         }
         @keyframes textFloat {
-            0% { transform: translateY(0) rotate(var(--tr)); }
-            100% { transform: translateY(-30px) rotate(var(--tr)); }
+            from { transform: translateY(0) rotate(var(--tr, 0deg)); }
+            to   { transform: translateY(-28px) rotate(var(--tr, 0deg)); }
         }
 
-        /* --- 3. CENTRAL QUOTE (SCROLLABLE) --- */
+        /* Muncul pelan setelah tombol start ditekan */
+        .js .photo-item, .js .decoration, .js .floating-text { opacity: 0; }
+        body.started .photo-item     { opacity: .88; }
+        body.started .decoration     { opacity: .85; }
+        body.started .floating-text  { opacity: 1; }
+
+        /* ============ 3. KOTAK QUOTE UTAMA ============ */
         .center-content {
-            position: absolute;
-            top: 50%; left: 50%;
+            position: absolute; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             z-index: 100;
-            width: 90%; 
-            max-width: 900px;
-            height: 85vh; 
-            display: flex;
-            justify-content: center;
-            /* Tambah position relative supaya elemen anak (bebek/bola) mengikuti dia */
-            position: relative; 
+            width: min(92%, 800px);
+            height: min(86vh, 880px);
         }
+        .js .center-content {
+            opacity: 0; transform: translate(-50%, -47%) scale(.97);
+            transition: opacity 1s ease .15s, transform 1.1s cubic-bezier(.22,.8,.3,1) .15s;
+        }
+        body.started .center-content { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 
         .quote-box {
-            background: rgba(20, 20, 40, 0.6);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            
-            border-radius: 25px;
-            padding: 45px;
-            width: 100%;
-            height: 100%;
-            color: #fff;
-            
-            overflow-y: auto;
-            overflow-x: hidden;
+            position: relative; width: 100%; height: 100%;
+            background: linear-gradient(160deg, rgba(24,18,52,.66), rgba(14,10,34,.72));
+            backdrop-filter: blur(18px) saturate(1.2);
+            -webkit-backdrop-filter: blur(18px) saturate(1.2);
+            border: 1px solid var(--line);
+            border-radius: 26px;
+            box-shadow: 0 30px 80px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.08);
+            padding: clamp(28px, 4.5vw, 52px);
+            padding-top: 68px;
+            overflow-y: auto; overflow-x: hidden;
             text-align: justify;
         }
 
-        /* Scrollbar */
-        .quote-box::-webkit-scrollbar {
-            width: 6px;
-        }
-        .quote-box::-webkit-scrollbar-track {
-            background: transparent;
-        }
+        /* Scrollbar custom */
+        .quote-box::-webkit-scrollbar { width: 8px; }
+        .quote-box::-webkit-scrollbar-track { background: rgba(255,255,255,.04); border-radius: 99px; }
         .quote-box::-webkit-scrollbar-thumb {
-            background-color: rgba(255, 105, 180, 0.5);
-            border-radius: 10px;
+            background: linear-gradient(var(--pink), var(--peach));
+            border-radius: 99px; border: 2px solid transparent; background-clip: padding-box;
         }
 
-        /* Typography */
+        /* Progress baca */
+        .read-progress {
+            position: sticky; top: 0; z-index: 10; height: 3px; width: 0;
+            background: linear-gradient(90deg, var(--gold), var(--pink));
+            box-shadow: 0 0 12px rgba(255,143,171,.8);
+            border-radius: 0 99px 99px 0;
+            transition: width .15s linear;
+        }
+
+        /* Header dalam kotak */
+        .box-header { text-align: center; margin-bottom: 24px; }
+        .eyebrow {
+            font-size: .66rem; font-weight: 600; letter-spacing: .35em;
+            text-transform: uppercase; color: var(--gold); opacity: .9;
+        }
+        .box-header h1 {
+            font-family: 'Playfair Display', serif; font-style: italic; font-weight: 600;
+            font-size: clamp(1.9rem, 4.5vw, 2.7rem);
+            margin: 10px 0 6px;
+            background: linear-gradient(92deg, #ffd9e0, #ff8fab 45%, #ffd86b);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            filter: drop-shadow(0 2px 12px rgba(255,143,171,.25));
+        }
+        .tagline { font-size: .8rem; color: rgba(255,255,255,.65); letter-spacing: .06em; }
+        .tagline em { font-style: normal; font-weight: 700; color: var(--peach); }
+
+        .divider {
+            display: flex; align-items: center; gap: 12px; justify-content: center;
+            max-width: 260px; margin: 18px auto 30px;
+        }
+        .divider span { flex: 1; height: 1px; }
+        .divider span:first-child { background: linear-gradient(90deg, transparent, rgba(255,255,255,.35)); }
+        .divider span:last-child  { background: linear-gradient(90deg, rgba(255,255,255,.35), transparent); }
+        .divider i { color: var(--pink); font-size: .75rem; animation: beat 1.6s ease-in-out infinite; }
+        @keyframes beat { 0%,100% { transform: scale(1); } 25% { transform: scale(1.35); } 40% { transform: scale(1); } }
+
+        /* Tipografi isi */
         .main-quote {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 1.15rem;
-            line-height: 1.8;
-            margin-bottom: 20px;
-            font-weight: 400;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-            color: #f0f0f0;
+            font-size: 1.02rem; line-height: 1.95; margin-bottom: 22px;
+            font-weight: 400; color: #efeaff;
+            text-shadow: 0 1px 2px rgba(0,0,0,.55);
         }
-
+        .main-quote.lead::first-letter {
+            font-family: 'Playfair Display', serif; font-weight: 700;
+            font-size: 3.1em; float: left; line-height: .85;
+            padding: 6px 10px 0 0; color: var(--peach);
+        }
         .main-quote span {
-            color: #ffb7b2;
-            font-weight: 600;
+            color: #ffdfe6; font-weight: 600; padding: 0 2px; border-radius: 2px;
+            background: linear-gradient(180deg, transparent 64%, rgba(255,143,171,.35) 64%);
+        }
+        .main-quote span.gold {
+            color: #ffe9b3;
+            background: linear-gradient(180deg, transparent 64%, rgba(255,216,107,.32) 64%);
         }
 
         .sub-quote {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.2);
-            font-family: 'Dancing Script', cursive;
-            font-size: 1.8rem;
-            color: #ffb7b2;
-            text-align: center;
+            margin-top: 44px; padding-top: 26px;
+            border-top: 1px solid rgba(255,255,255,.14);
+            font-family: 'Dancing Script', cursive; font-size: 1.9rem;
+            color: var(--peach); text-align: center;
+            text-shadow: 0 2px 14px rgba(255,143,171,.35);
         }
 
-        /* --- 4. START OVERLAY --- */
+        /* Animasi reveal saat scroll */
+        .js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
+        .js .reveal.visible { opacity: 1; transform: none; }
+
+        /* Panah bawah "scroll" */
+        .scroll-hint {
+            position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+            z-index: 130; pointer-events: none; transition: opacity .5s;
+        }
+        .scroll-hint span {
+            width: 34px; height: 34px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2);
+            backdrop-filter: blur(6px); color: #ffd9e0; font-size: .8rem;
+            animation: bob 1.8s ease-in-out infinite;
+        }
+        @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+
+        /* ============ 4. LAYAR START ============ */
         #start-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #000;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            cursor: pointer;
+            position: fixed; inset: 0; z-index: 9999; padding: 24px; text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: radial-gradient(900px 600px at 50% 30%, #2a1f4d, #0a0716 70%);
+            color: #fff; cursor: pointer;
             transition: opacity 1s ease;
         }
-
+        .ov-sparkle { position: absolute; color: var(--gold); animation: twinkle 2.4s infinite; }
+        @keyframes twinkle {
+            0%,100% { opacity: 0; transform: scale(.4) rotate(0); }
+            50%     { opacity: .9; transform: scale(1) rotate(90deg); }
+        }
+        .ov-heart {
+            font-size: 1.6rem; color: var(--pink); margin-bottom: 14px;
+            animation: beat 1.6s infinite;
+            filter: drop-shadow(0 0 12px rgba(255,143,171,.8));
+        }
         #start-overlay h3 {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 300;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            color: #aaa;
+            font-weight: 500; letter-spacing: .4em; font-size: .7rem;
+            text-transform: uppercase; color: #9d94c9; margin-bottom: 14px;
         }
-
         #start-overlay h2 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: #ff69b4;
+            font-family: 'Dancing Script', cursive; font-weight: 700;
+            font-size: clamp(2.2rem, 7vw, 3.4rem); margin-bottom: 12px;
+            background: linear-gradient(92deg, #ffd9e0, #ff8fab, #ffd86b);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            filter: drop-shadow(0 4px 18px rgba(255,143,171,.35));
         }
-
         #start-overlay p {
-            font-family: 'Open Sans', sans-serif;
-            font-size: 0.85rem;
-            opacity: 0.6;
-            max-width: 260px;
-            text-align: center;
-            line-height:1.6;
+            font-size: .85rem; color: rgba(255,255,255,.6);
+            max-width: 300px; line-height: 1.7; margin-bottom: 34px;
+        }
+        .tap-btn {
+            display: inline-flex; align-items: center; gap: 10px;
+            padding: 13px 30px; border-radius: 999px;
+            border: 1px solid rgba(255,255,255,.25);
+            background: rgba(255,255,255,.06);
+            backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+            font-weight: 600; font-size: .85rem; letter-spacing: .12em; text-transform: uppercase;
+            animation: pulseBtn 2.2s ease-in-out infinite;
+        }
+        @keyframes pulseBtn {
+            0%,100% { box-shadow: 0 0 0 0 rgba(255,143,171,.45); }
+            50%     { box-shadow: 0 0 0 14px rgba(255,143,171,0); }
         }
 
-        /* --- RESPONSIVE MOBILE (BOX TRANSPARAN & FOTO NYEBAR) --- */
-        @media (max-width: 768px) {
-            /* Kotak Teks */
-            .center-content {
-                width: 80%; 
-                height: 70vh;
-            }
-
-            .quote-box {
-                padding: 25px 20px;
-                border-radius: 20px;
-                
-                /* Ubah Transparansi & Blur Sesuai Request */
-                background: rgba(10, 10, 25, 0.5); /* Lebih transparan */
-                backdrop-filter: blur(5px); /* Blur dikurangi */
-            }
-
-            .main-quote {
-                font-size: 1rem; 
-                line-height: 1.7;
-                margin-bottom: 16px;
-                text-shadow: 0 2px 4px rgba(0,0,0,1); 
-            }
-
-            /* Foto Latar (Portrait Mode) */
-            .photo-item {
-                width: 70px; 
-                opacity: 0.6; 
-                filter: blur(0px); 
-                padding: 4px 4px 18px 4px;
-            }
-            
-            .caption {
-                font-size: 0.5rem;
-                bottom: 4px;
-            }
-
-            .floating-text {
-                font-size: 1.5rem;
-                opacity: 0.05; 
-            }
-            
-            #start-overlay h2 {
-                font-size: 1.8rem;
-            }
+        /* ============ 5. TOMBOL MUSIK MELAYANG ============ */
+        #music-btn {
+            position: fixed; right: 18px; bottom: 18px; z-index: 500;
+            width: 46px; height: 46px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--line);
+            background: rgba(20,16,44,.6);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            color: #ffd9e0; font-size: 1.05rem; cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0,0,0,.4); transition: .3s;
         }
+        #music-btn:hover { transform: scale(1.08); color: #fff; }
+        #music-btn.playing i { animation: spin 3.5s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* --- TAMBAHAN KHUSUS HP LANDSCAPE (MIRING) --- */
-        @media (max-height: 600px) and (orientation: landscape) {
-            .photo-item {
-                width: 60px !important; 
-                padding: 2px 2px 10px 2px;
-            }
-            
-            .caption {
-                font-size: 0.3rem;
-                bottom: 2px;
-            }
-
-            .center-content {
-                width: 70%;
-                height: 90vh;
-            }
-
-            .main-quote {
-                font-size: 0.95rem;
-            }
-
-            .quote-box {
-                background: rgba(10, 10, 25, 0.5);
-                backdrop-filter: blur(5px);
-            }
-        }
-
-        /* --- TAMBAHAN DESIGN BARU (BEBEK & BOLA) --- */
-        
-        /* 1. Bebek Lucu: PAS DI ATAS GARIS BOX KANAN */
+        /* ============ 6. BEBEK & BOLA ============ */
         .duck-container {
-            position: absolute;
-            /* Posisi: Naik ke atas kotak (-55px) supaya tidak nutupin teks */
-            top: -55px; 
-            right: 20px; /* Posisi kanan */
-            
-            z-index: 105; /* Di atas kotak */
-            cursor: grab;
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.4)); 
-            animation: waddle 2s infinite ease-in-out;
-            transform: rotate(-5deg);
+            position: absolute; top: -54px; right: 24px; z-index: 140;
+            cursor: pointer; user-select: none;
+            filter: drop-shadow(0 8px 14px rgba(0,0,0,.45));
+            animation: waddle 2.6s ease-in-out infinite;
         }
-
-        .cute-duck-img {
-            width: 60px; /* Ukuran bebek */
-            height: auto;
-        }
-
+        .duck-container img { width: 62px; display: block; transition: transform .2s; }
+        .duck-container:hover img { transform: scale(1.1) rotate(-6deg); }
+        .duck-container.quack { animation: quackJump .55s ease; }
         @keyframes waddle {
-            0%, 100% { transform: rotate(-5deg) translateY(0); }
-            50% { transform: rotate(0deg) translateY(-5px); } /* Menggeleng lucu */
+            0%,100% { transform: rotate(-5deg) translateY(0); }
+            50%     { transform: rotate(3deg) translateY(-6px); }
         }
+        @keyframes quackJump {
+            0%   { transform: translateY(0) rotate(-5deg); }
+            30%  { transform: translateY(-16px) rotate(8deg) scale(1.08); }
+            60%  { transform: translateY(0) rotate(-8deg); }
+            100% { transform: translateY(0) rotate(-5deg); }
+        }
+        .bubble {
+            position: absolute; bottom: 105%; right: -6px;
+            background: #fff; color: #e0447c;
+            font-weight: 700; font-size: .78rem;
+            padding: 6px 12px; border-radius: 14px 14px 2px 14px;
+            white-space: nowrap; pointer-events: none;
+            box-shadow: 0 6px 16px rgba(0,0,0,.25);
+            opacity: 0; transform: translateY(6px) scale(.8); transition: .25s;
+        }
+        .bubble.show { opacity: 1; transform: translateY(0) scale(1); }
 
-        /* 2. Bola Warna ATAS AGAK TENGAH */
+        /* Bola jadi lampu gantung di tepi atas kotak */
         .bola-container {
-            position: absolute;
-            /* Posisi: Di atas garis kotak (-25px), Horisontal Tengah (50%) */
-            top: -25px;
-            left: 50%;
-            transform: translateX(-50%); /* Fix agar benar-benar di tengah */
-            
-            z-index: 150;
-            display: flex;
-            gap: 12px;
-            flex-direction: row; /* Susun mendatar biar pas di tengah atas */
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            z-index: 130; display: flex; gap: clamp(16px, 3vw, 30px);
         }
-
+        .bola-wrap {
+            display: flex; flex-direction: column; align-items: center;
+            transform-origin: top center;
+            animation: sway 3.6s ease-in-out infinite;
+        }
+        .string {
+            width: 2px; height: var(--h, 26px);
+            background: linear-gradient(rgba(255,255,255,.6), rgba(255,255,255,.15));
+        }
         .bola {
-            width: 18px; 
-            height: 18px;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-            animation: floatBola 3s infinite ease-in-out;
+            width: 15px; height: 15px; border-radius: 50%; margin-top: -2px;
+            box-shadow: 0 4px 10px rgba(0,0,0,.35);
+        }
+        .bola.kuning { background: radial-gradient(circle at 32% 28%, #fff6cf, #ffd200); box-shadow: 0 4px 10px rgba(0,0,0,.35), 0 0 12px rgba(255,210,0,.6); }
+        .bola.ungu   { background: radial-gradient(circle at 32% 28%, #e3c8ff, #8e44ad); box-shadow: 0 4px 10px rgba(0,0,0,.35), 0 0 12px rgba(142,68,173,.6); }
+        .bola.biru   { background: radial-gradient(circle at 32% 28%, #cfeaff, #2f80c3); box-shadow: 0 4px 10px rgba(0,0,0,.35), 0 0 12px rgba(47,128,195,.6); }
+        .bola.pink   { background: radial-gradient(circle at 32% 28%, #ffe0ea, #ff5f8f); box-shadow: 0 4px 10px rgba(0,0,0,.35), 0 0 12px rgba(255,95,143,.6); }
+        @keyframes sway { 0%,100% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } }
+
+        /* ============ 7. RESPONSIVE ============ */
+        @media (max-width: 768px) {
+            .center-content { width: 88%; height: 76vh; height: 74dvh; }
+            .quote-box {
+                padding: 58px 20px 30px;
+                border-radius: 20px;
+                background: rgba(12,9,30,.5);
+                backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            }
+            .box-header h1 { font-size: 1.7rem; }
+            .main-quote { font-size: .95rem; line-height: 1.8; margin-bottom: 16px; }
+            .sub-quote { font-size: 1.55rem; margin-top: 32px; }
+            .sm-hide { display: none; }
+            .duck-container { top: -44px; right: 12px; }
+            .duck-container img { width: 48px; }
+            .string { height: calc(var(--h, 26px) * .7); }
+            .bola { width: 12px; height: 12px; }
         }
 
-        .bola.kuning { background-color: #ffd700; } /* Kuning */
-        .bola.ungu { background-color: #9b59b6; animation-delay: 0.5s; } /* Ungu */
-        .bola.biru { background-color: #3498db; animation-delay: 1s; } /* Biru */
+        @media (max-width: 480px) {
+            .main-quote { text-align: left; }
+        }
 
-        @keyframes floatBola {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        /* HP landscape (dimiringkan) */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .center-content { width: 72%; height: 94vh; height: 92dvh; }
+            .quote-box { padding: 44px 26px 20px; }
+            .box-header { margin-bottom: 10px; }
+            .divider { margin: 10px auto 14px; }
+            .main-quote { font-size: .9rem; line-height: 1.65; margin-bottom: 13px; }
+            .sub-quote { margin-top: 22px; padding-top: 14px; font-size: 1.45rem; }
+            .sm-hide { display: none; }
+            .duck-container { top: -40px; right: 14px; }
+            .duck-container img { width: 44px; }
+        }
+
+        /* preferensi gerak minimal */
+        @media (prefers-reduced-motion: reduce) {
+            * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
         }
     </style>
 </head>
@@ -350,183 +455,330 @@
         <source src="song.mpeg" type="audio/mpeg">
     </audio>
 
-    <!-- Layar Start -->
-    <div id="start-overlay" onclick="startExperience()">
-        <h3>Klik Tombol</h3>
-        <h2>HUBUNGAN PARASOCIAL</h2>
-        <p>(Ketika Oshi menjadi alasan untuk "BERTAHAN")</p>
-    </div>
+    <!-- Efek kunang-kunang -->
+    <canvas id="fx"></canvas>
 
-    <!-- Background -->
-    <div class="animated-bg"></div>
+    <!-- Background berlapis -->
+    <div class="bg"></div>
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
 
-    <!-- Area Foto & Dekorasi -->
+    <!-- Dinding foto -->
     <div id="memory-wall"></div>
+
+    <!-- Vignette + grain -->
+    <div class="vignette"></div>
+    <div class="grain"></div>
 
     <!-- Konten Tengah -->
     <div class="center-content">
-        <!-- DESIGN BARU: Bebek & Bola (DIPINDAHKAN KE DALAM center-content) -->
-        <div class="duck-container">
-            <!-- Ikon Bebek Kuning Lucu -->
-            <img src="https://img.icons8.com/color/96/rubber-duck.png" alt="Bebek Lucu" class="cute-duck-img">
-        </div>
+        <div class="quote-box" id="quoteBox">
+            <div class="read-progress" id="readProgress"></div>
 
-        <div class="bola-container">
-            <div class="bola kuning"></div>
-            <div class="bola ungu"></div>
-            <div class="bola biru"></div>
-        </div>
+            <header class="box-header reveal">
+                <p class="eyebrow">✦ Insight48 Presents ✦</p>
+                <h1>Hubungan Parasocial</h1>
+                <p class="tagline">Ketika Oshi menjadi alasan untuk <em>"BERTAHAN"</em></p>
+                <div class="divider"><span></span><i class="fas fa-heart"></i><span></span></div>
+            </header>
 
-        <div class="quote-box">
-            <p class="main-quote">
+            <p class="main-quote lead reveal">
                 Hubungan parasocial sering dianggap negatif sebagai bentuk obsesi atau sekedar <span>"HALU"</span>. Padahal, secara psikologis, merasa punya ikatan emosional dengan idola adalah fenomena yang normal.
             </p>
-            
-            <p class="main-quote">
-                Meski satu arah, kedekatan yang dirasakan itu <span>TETAP TERASA NYATA DI HATI</span> para penggemar. Berbeda dengan hubungan nyata yang penuh risiko penolakan, hubungan dengan idola memberikan rasa aman dan diterima.
+
+            <p class="main-quote reveal">
+                Meski satu arah, kedekatan yang dirasakan itu <span>TETAP TERASA NYATA DI HATI</span> para penggemar. Berbeda dengan hubungan nyata yang penuh risiko penolakan, hubungan dengan idola memberikan <span>rasa aman dan diterima</span>.
             </p>
 
-            <p class="main-quote">
+            <p class="main-quote reveal">
                 Member menjadi sumber kekuatan yang selalu ada untuk menyemangati fans melalui layar ponsel. Mereka memberikan energi positif saat kehidupan nyata terasa terlalu berat untuk dihadapi.
             </p>
 
-            <p class="main-quote">
-                Hubungan parasocial hadir sebagai penyelamat. Saat seseorang berada di titik terendah dan merasa putus asa, mereka butuh sesuatu untuk dijadikan pegangan.
+            <p class="main-quote reveal">
+                Hubungan parasocial hadir sebagai <span>penyelamat</span>. Saat seseorang berada di titik terendah dan merasa putus asa, mereka butuh sesuatu untuk dijadikan pegangan.
             </p>
 
-            <p class="main-quote">
-                Keinginan melihat Oshi tampil, mendengar mereka tertawa di live, atau sekadar menunggu update terbaru, bisa menjadi alasan kuat untuk tetap semangat menjalani hari.
+            <p class="main-quote reveal">
+                Keinginan melihat Oshi tampil, mendengar mereka tertawa di live, atau sekadar menunggu update terbaru, bisa menjadi <span class="gold">alasan kuat untuk tetap semangat menjalani hari</span>.
             </p>
 
-            <p class="main-quote">
-                Dunia idola sering kali menjadi satu-satunya tempat aman bagi mereka yang sedang berjuang melawan depresi.
+            <p class="main-quote reveal">
+                Dunia idola sering kali menjadi satu-satunya <span>tempat aman</span> bagi mereka yang sedang berjuang melawan depresi.
             </p>
 
-            <p class="main-quote">
-                Hubungan ini memberikan rutinitas yang positif: ada jadwal yang dinanti, ada komunitas yang sefrekuensi, dan ada sosok idola yang memberi cahaya di tengah rasa sepi.
+            <p class="main-quote reveal">
+                Hubungan ini memberikan rutinitas yang positif: ada jadwal yang dinanti, ada komunitas yang sefrekuensi, dan ada sosok idola yang <span>memberi cahaya di tengah rasa sepi</span>.
             </p>
 
-            <p class="main-quote">
-                Banyak fans yang mengaku batal menyerah setelah melihat perjuangan Oshi-nya. Lewat hubungan ini, mereka bisa menyerap energi positif dan merasa tidak sendirian saat sedang kesulitan.
+            <p class="main-quote reveal">
+                Banyak fans yang mengaku batal menyerah setelah melihat perjuangan Oshi-nya. Lewat hubungan ini, mereka bisa menyerap energi positif dan <span>merasa tidak sendirian</span> saat sedang kesulitan.
             </p>
 
-            <p class="main-quote">
-                Muncul sebuah tekad: <span>"Kalau Oshi-ku saja tidak menyerah mengejar mimpinya, aku juga tidak boleh menyerah pada hidupku."</span>
+            <p class="main-quote reveal">
+                Muncul sebuah tekad: <span class="gold">"Kalau Oshi-ku saja tidak menyerah mengejar mimpinya, aku juga tidak boleh menyerah pada hidupku."</span>
             </p>
 
-            <p class="main-quote">
-                Mencari pegangan pada sosok Oshi adalah bukti perjuanganmu yang luar biasa untuk tetap ada. Jangan biarkan orang lain meremahkan cara kamu mencari cahaya. Hubungan parasocial ini valid, perasaanmu valid, dan keberadaanmu sangat berharga. <span>TERIMAKASIH KARENA SUDAH MEMILIH UNTUK BERTAHAN HINGGA HARI INI.</span>
+            <p class="main-quote reveal">
+                Mencari pegangan pada sosok Oshi adalah bukti perjuanganmu yang luar biasa untuk tetap ada. Jangan biarkan orang lain meremahkan cara kamu mencari cahaya. Hubungan parasocial ini valid, perasaanmu valid, dan keberadaanmu sangat berharga. <span class="gold">TERIMAKASIH KARENA SUDAH MEMILIH UNTUK BERTAHAN HINGGA HARI INI.</span>
             </p>
 
-            <div class="sub-quote">
+            <div class="sub-quote reveal">
                 — INSIGHT48 | Lebih Dari Sekedar Ngidol —
             </div>
         </div>
+
+        <!-- Bebek lucu (bisa diklik!) -->
+        <div class="duck-container" id="duck">
+            <span class="bubble" id="bubble">Kwek!</span>
+            <img src="https://img.icons8.com/color/96/rubber-duck.png" alt="Bebek Lucu">
+        </div>
+
+        <!-- Lampu gantung warna-warni -->
+        <div class="bola-container">
+            <div class="bola-wrap" style="--h:24px; animation-delay:0s"><span class="string"></span><span class="bola kuning"></span></div>
+            <div class="bola-wrap" style="--h:38px; animation-delay:.4s"><span class="string"></span><span class="bola ungu"></span></div>
+            <div class="bola-wrap" style="--h:20px; animation-delay:.8s"><span class="string"></span><span class="bola biru"></span></div>
+            <div class="bola-wrap" style="--h:32px; animation-delay:1.2s"><span class="string"></span><span class="bola pink"></span></div>
+        </div>
+
+        <!-- Petunjuk scroll -->
+        <div class="scroll-hint" id="scrollHint"><span><i class="fas fa-chevron-down"></i></span></div>
+    </div>
+
+    <!-- Tombol musik -->
+    <button id="music-btn" aria-label="Putar / Jeda Musik"><i class="fas fa-compact-disc"></i></button>
+
+    <!-- Layar Start -->
+    <div id="start-overlay" onclick="startExperience()">
+        <i class="fas fa-star ov-sparkle" style="left:12%; top:18%; font-size:14px; animation-delay:.2s"></i>
+        <i class="fas fa-star ov-sparkle" style="left:86%; top:22%; font-size:11px; animation-delay:.7s"></i>
+        <i class="fas fa-heart ov-sparkle" style="left:18%; top:72%; font-size:12px; animation-delay:1.1s"></i>
+        <i class="fas fa-star ov-sparkle" style="left:80%; top:68%; font-size:16px; animation-delay:.4s"></i>
+        <i class="fas fa-star ov-sparkle" style="left:50%; top:10%; font-size:10px; animation-delay:1.4s"></i>
+        <i class="fas fa-heart ov-sparkle" style="left:70%; top:42%; font-size:10px; animation-delay:.9s"></i>
+
+        <i class="fas fa-heart ov-heart"></i>
+        <h3>Klik Tombol</h3>
+        <h2>Hubungan Parasocial</h2>
+        <p>(Ketika Oshi menjadi alasan untuk "BERTAHAN")</p>
+        <div class="tap-btn"><i class="fas fa-play"></i><span>Mulai Baca</span></div>
     </div>
 
     <script>
-        // --- DATA FOTO (List Foto Kamu) ---
+        /* ================= DATA ================= */
         const photos = [
-            "jkt48.mpeg",
+            "jkt48.jpeg",
             "JKTCYNTYIA.jpeg",
-            "1.jpeg",
-            "2.jpeg",
-            "3.jpeg",
-            "5.jpeg",
-            "6.jpeg",
-            "7.jpeg",
-            "8.jpeg",
-            "9.jpeg",
-            "10.jpeg",
-            "erinee.jpeg",
-            "erine.jpeg"
+            "1.jpeg", "2.jpeg", "3.jpeg","4.jpeg", "5.jpeg", "6.jpeg",
+            "7.jpeg", "8.jpeg", "9.jpeg", "10.jpeg",
+            "erinee.jpeg", "erine.jpeg"
         ];
+        const captions   = ["JKT48", "Forever Young", "My Oshi", "Terima Kasih", "♡"];
+        const decorations = ['fa-heart','fa-heart','fa-star','fa-music','fa-spa','fa-leaf','fa-feather','fa-heart'];
 
-        const decorations = [
-            'fa-heart', 'fa-heart', 'fa-heart', 
-            'fa-spa', 'fa-spa', 
-            'fa-leaf', 
-            'fa-star', 'fa-star'
+        // Zona aman: foto menempel di tepi layar, sebagian "mengintip" dari balik kaca
+        const safeZones = [
+            {x:1,y:6},{x:1,y:26},{x:1,y:48},{x:1,y:70},
+            {x:84,y:5},{x:90,y:27},{x:88,y:50},{x:85,y:72},
+            {x:14,y:2},{x:38,y:1},{x:62,y:2},{x:78,y:3},
+            {x:16,y:88},{x:40,y:90},{x:64,y:89},{x:80,y:90},
+            {x:30,y:12},{x:60,y:85}
         ];
 
         const wall = document.getElementById('memory-wall');
 
-        function createMemoryWall() {
-            photos.forEach((url) => {
+        function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+        /* ================= DINDING FOTO ================= */
+        function createMemoryWall(){
+            const zones = shuffle(safeZones.slice());
+
+            photos.forEach((url, i) => {
                 const item = document.createElement('div');
-                item.className = 'photo-item';
-                
-                // Variasi Ukuran
-                const scale = 0.7 + Math.random() * 0.5; 
-                item.style.width = (140 * scale) + 'px';
+                item.className = 'photo-item'
+                    + (Math.random() < .38 ? ' sm-hide' : '')   // sebagian disembunyikan di HP
+                    + (Math.random() < .4  ? ' tall'    : '');  // variasi orientasi
+                item.style.setProperty('--ws', (0.85 + Math.random() * 0.4).toFixed(2));
+                item.style.setProperty('--d',  (i * 0.08) + 's');
 
-                // SEBARAN FOTO DIBUAT LEBAR
-                const posX = Math.random() * 95; 
-                const posY = Math.random() * 95;
-                const rotation = (Math.random() * 40 - 20).toFixed(1);
-                const zIndex = Math.floor(Math.random() * 10);
+                const z  = zones[i % zones.length];
+                const jx = Math.random() * 8 - 4;
+                const jy = Math.random() * 6 - 3;
+                item.style.left = Math.min(92, Math.max(-2, z.x + jx)) + '%';
+                item.style.top  = Math.min(88, Math.max(-2, z.y + jy)) + '%';
 
-                item.style.left = posX + '%';
-                item.style.top = posY + '%';
-                item.style.transform = `rotate(${rotation}deg)`;
-                item.style.zIndex = zIndex;
-                item.style.setProperty('--rot', `${rotation}deg`);
-                item.style.animationDelay = (Math.random() * 5) + 's';
+                const rot = (Math.random() * 24 - 12).toFixed(1);
+                item.style.setProperty('--rot', rot + 'deg');
+                item.style.zIndex = 1 + Math.floor(Math.random() * 4);
+                item.style.animationDelay = (-Math.random() * 9) + 's';
 
-                item.innerHTML = `
-                    <img src="${url}" alt="Memory">
-                    <div class="caption">JKT48</div>
-                `;
+                const img = document.createElement('img');
+                img.src = url; img.alt = 'Memory'; img.loading = 'lazy';
+                img.addEventListener('error', () => item.style.display = 'none');
+
+                const cap = document.createElement('div');
+                cap.className = 'caption';
+                cap.textContent = captions[i % captions.length];
+
+                item.append(img, cap);
                 wall.appendChild(item);
-                
-                if(Math.random() > 0.5) {
-                    addDecoration(posX, posY, zIndex);
-                }
+
+                if (Math.random() > .45) addDecoration(z.x, z.y, item.style.zIndex);
             });
 
-            createFloatingText("Forever", 5, 10);
-            createFloatingText("Young", 85, 80);
-            createFloatingText("Love", 10, 85);
-            createFloatingText("Dream", 80, 5);
+            createFloatingText("Forever", 4, 8);
+            createFloatingText("Young",  86, 82);
+            createFloatingText("Love",    8, 86);
+            createFloatingText("Dream",  82, 6);
+            createFloatingText("Oshi",   42, 42, true); // besar, blur di balik kaca
         }
 
-        function addDecoration(x, y, zIndex) {
+        function addDecoration(x, y, z){
             const dec = document.createElement('i');
-            const type = decorations[Math.floor(Math.random() * decorations.length)];
-            dec.className = `fas ${type} decoration`;
-            const offsetX = (Math.random() - 0.5) * 10; 
-            const offsetY = (Math.random() - 0.5) * 10;
-            const size = 8 + Math.random() * 15; 
-            dec.style.left = `calc(${x}% + ${offsetX}%)`;
-            dec.style.top = `calc(${y}% + ${offsetY}%)`;
-            dec.style.fontSize = `${size}px`;
-            dec.style.zIndex = zIndex + 1;
-            dec.style.color = Math.random() > 0.5 ? '#ff9a9e' : '#fff';
+            dec.className = 'fas ' + decorations[Math.floor(Math.random() * decorations.length)] + ' decoration';
+            dec.style.left = 'calc(' + x + '% + ' + (Math.random() * 8 - 4) + '%)';
+            dec.style.top  = 'calc(' + y + '% + ' + (Math.random() * 8 - 4) + '%)';
+            dec.style.fontSize = (8 + Math.random() * 14) + 'px';
+            dec.style.zIndex = (+z || 1) + 1;
+            dec.style.color = Math.random() > .5 ? 'rgba(255,143,171,.75)' : 'rgba(255,214,110,.7)';
             wall.appendChild(dec);
         }
 
-        function createFloatingText(text, x, y) {
+        function createFloatingText(text, x, y, big){
             const el = document.createElement('div');
-            el.className = 'floating-text';
+            el.className = 'floating-text' + (big ? ' big' : '');
             el.innerText = text;
             el.style.left = x + '%';
-            el.style.top = y + '%';
+            el.style.top  = y + '%';
             el.style.setProperty('--tr', (Math.random() * 20 - 10) + 'deg');
             wall.appendChild(el);
         }
 
-        function startExperience() {
-            const audio = document.getElementById('bg-music');
+        /* ================= ANIMASI REVEAL SAAT SCROLL ================= */
+        const box = document.getElementById('quoteBox');
+        const io  = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+            });
+        }, { root: box, threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+        /* ================= PROGRESS BACA + PETUNJUK SCROLL ================= */
+        const prog = document.getElementById('readProgress');
+        const hint = document.getElementById('scrollHint');
+        function updateScrollUI(){
+            const max = box.scrollHeight - box.clientHeight;
+            prog.style.width = (max > 0 ? box.scrollTop / max * 100 : 100) + '%';
+            hint.style.opacity = (box.scrollTop > 60 || max <= 0) ? 0 : 1;
+        }
+        box.addEventListener('scroll', updateScrollUI);
+
+        /* ================= BEBEK INTERAKTIF ================= */
+        const duck   = document.getElementById('duck');
+        const bubble = document.getElementById('bubble');
+        const quacks = ['Kwek!', 'Semangat ya!', 'Jangan menyerah, ya!', 'Kamu hebat!', 'Kwek kwek ♡'];
+        duck.addEventListener('click', () => {
+            duck.classList.remove('quack'); void duck.offsetWidth; duck.classList.add('quack');
+            bubble.textContent = quacks[Math.floor(Math.random() * quacks.length)];
+            bubble.classList.add('show');
+            clearTimeout(bubble._t);
+            bubble._t = setTimeout(() => bubble.classList.remove('show'), 1400);
+        });
+        duck.addEventListener('animationend', e => {
+            if (e.animationName === 'quackJump') duck.classList.remove('quack');
+        });
+
+        /* ================= MUSIK ================= */
+        const audio = document.getElementById('bg-music');
+        const mbtn  = document.getElementById('music-btn');
+        mbtn.addEventListener('click', () => {
+            if (audio.paused) { audio.play().catch(()=>{}); mbtn.classList.add('playing'); }
+            else { audio.pause(); mbtn.classList.remove('playing'); }
+        });
+
+        /* ================= START ================= */
+        function startExperience(){
             const overlay = document.getElementById('start-overlay');
-            audio.volume = 0.6;
-            audio.play().catch(e => console.log("Audio error:", e));
+            if (!overlay) return;
+            document.body.classList.add('started');
+            audio.volume = 0.55;
+            audio.play().then(() => mbtn.classList.add('playing')).catch(e => console.log("Audio error:", e));
             overlay.style.opacity = 0;
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 1000);
+            setTimeout(() => overlay.remove(), 1000);
+        }
+        addEventListener('keydown', e => {
+            if ((e.key === 'Enter' || e.key === ' ') && document.getElementById('start-overlay')) {
+                e.preventDefault(); startExperience();
+            }
+        });
+
+        /* ================= KUNANG-KUNANG (CANVAS) ================= */
+        const cvs = document.getElementById('fx');
+        const ctx = cvs.getContext('2d');
+        const DPR = Math.min(window.devicePixelRatio || 1, 2);
+        let W, H;
+
+        function makeSprite(r, g, b){
+            const s = document.createElement('canvas'); s.width = s.height = 64;
+            const c = s.getContext('2d');
+            const grd = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+            grd.addColorStop(0,  `rgba(${r},${g},${b},1)`);
+            grd.addColorStop(.3, `rgba(${r},${g},${b},.45)`);
+            grd.addColorStop(1,  `rgba(${r},${g},${b},0)`);
+            c.fillStyle = grd; c.fillRect(0, 0, 64, 64);
+            return s;
+        }
+        const SPR = [makeSprite(255,255,255), makeSprite(255,160,190), makeSprite(255,215,120)];
+
+        function resize(){
+            W = cvs.width  = innerWidth  * DPR;
+            H = cvs.height = innerHeight * DPR;
+            cvs.style.width  = innerWidth  + 'px';
+            cvs.style.height = innerHeight + 'px';
+        }
+        addEventListener('resize', resize); resize();
+
+        function newP(init){
+            return {
+                x: Math.random() * W, y: init ? Math.random() * H : H + 20,
+                s: (8 + Math.random() * 22) * DPR,
+                v: (0.15 + Math.random() * 0.4) * DPR,
+                tw: Math.random() * Math.PI * 2,
+                sw: Math.random() * Math.PI * 2,
+                amp: (10 + Math.random() * 30) * DPR,
+                img: SPR[Math.floor(Math.random() * SPR.length)]
+            };
+        }
+        const parts = Array.from({ length: innerWidth < 768 ? 18 : 36 }, () => newP(true));
+        (function tick(){
+            ctx.clearRect(0, 0, W, H);
+            ctx.globalCompositeOperation = 'lighter';
+            for (const p of parts){
+                p.y -= p.v; p.sw += 0.004; p.tw += 0.03;
+                const x = p.x + Math.sin(p.sw) * p.amp;
+                ctx.globalAlpha = 0.25 + 0.55 * Math.abs(Math.sin(p.tw));
+                ctx.drawImage(p.img, x - p.s/2, p.y - p.s/2, p.s, p.s);
+                if (p.y < -30) Object.assign(p, newP(false));
+            }
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(tick);
+        })();
+
+        /* ================= HATI MELAYANG ================= */
+        for (let i = 0; i < 7; i++){
+            const h = document.createElement('i');
+            h.className = 'fas fa-heart heart-float';
+            h.style.left = (Math.random() * 100) + '%';
+            h.style.fontSize = (10 + Math.random() * 14) + 'px';
+            h.style.color = Math.random() > .5 ? 'rgba(255,143,171,.4)' : 'rgba(255,214,110,.35)';
+            h.style.animationDuration = (11 + Math.random() * 10) + 's';
+            h.style.animationDelay = (-Math.random() * 15) + 's';
+            document.body.appendChild(h);
         }
 
+        /* ================= INIT ================= */
         createMemoryWall();
+        updateScrollUI();
     </script>
 </body>
 </html>
