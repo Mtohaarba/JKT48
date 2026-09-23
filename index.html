@@ -110,6 +110,7 @@
             animation: floatMemories 9s ease-in-out infinite alternate;
             pointer-events: auto;
             transition: opacity 1s ease var(--d,0s), filter .35s ease, box-shadow .35s ease;
+            cursor: pointer;
         }
         /* Selotip washi di atas polaroid */
         .photo-item::before {
@@ -406,6 +407,116 @@
         .bola.pink   { background: radial-gradient(circle at 32% 28%, #ffe0ea, #ff5f8f); box-shadow: 0 4px 10px rgba(0,0,0,.35), 0 0 12px rgba(255,95,143,.6); }
         @keyframes sway { 0%,100% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } }
 
+        /* ============ 8. ALBUM FOTO (POJOK KANAN ATAS) ============ */
+        #album-btn {
+            position: fixed; top: 18px; right: 18px; z-index: 500;
+            display: flex; align-items: center; gap: 8px;
+            padding: 10px 16px 10px 12px; border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(20,16,44,.6);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            color: #ffd9e0; font-size: .74rem; font-weight: 600; letter-spacing: .04em;
+            cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,.4); transition: .3s;
+            opacity: 0;
+        }
+        body.started #album-btn { opacity: 1; }
+        #album-btn:hover { transform: scale(1.05); color: #fff; border-color: rgba(255,143,171,.5); }
+        #album-btn i.fa-images { font-size: .95rem; color: var(--pink); }
+        #album-btn .album-count {
+            display: inline-flex; align-items: center; justify-content: center;
+            min-width: 17px; height: 17px; padding: 0 4px; border-radius: 999px;
+            background: linear-gradient(135deg, var(--pink), var(--gold));
+            color: #2a1730; font-size: .62rem; font-weight: 700;
+        }
+
+        #album-overlay {
+            position: fixed; inset: 0; z-index: 900;
+            background: rgba(6,4,18,.72);
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            opacity: 0; pointer-events: none;
+            transition: opacity .4s ease;
+        }
+        #album-overlay.open { opacity: 1; pointer-events: auto; }
+
+        #album-panel {
+            position: fixed; top: 0; right: 0; bottom: 0; z-index: 901;
+            width: min(380px, 88vw); max-width: 420px;
+            background: linear-gradient(165deg, rgba(26,19,54,.92), rgba(14,10,32,.95));
+            border-left: 1px solid var(--line);
+            box-shadow: -24px 0 60px rgba(0,0,0,.5);
+            display: flex; flex-direction: column;
+            transform: translateX(100%);
+            transition: transform .45s cubic-bezier(.22,.8,.3,1);
+        }
+        #album-overlay.open #album-panel { transform: translateX(0); }
+
+        .album-head {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 22px 20px 16px; border-bottom: 1px solid var(--line);
+        }
+        .album-head h2 {
+            font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.25rem;
+            background: linear-gradient(92deg, #ffd9e0, #ff8fab 55%, #ffd86b);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .album-close {
+            width: 32px; height: 32px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid var(--line); background: rgba(255,255,255,.05);
+            color: #f2eeff; font-size: .8rem; cursor: pointer; transition: .25s;
+        }
+        .album-close:hover { background: rgba(255,143,171,.2); transform: rotate(90deg); }
+
+        .album-grid {
+            flex: 1; overflow-y: auto; padding: 18px;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+            align-content: start;
+        }
+        .album-grid::-webkit-scrollbar { width: 6px; }
+        .album-grid::-webkit-scrollbar-thumb { background: rgba(255,143,171,.4); border-radius: 99px; }
+
+        .album-thumb {
+            position: relative; border-radius: 10px; overflow: hidden;
+            aspect-ratio: 1/1; cursor: pointer; border: 1px solid rgba(255,255,255,.08);
+            transition: transform .25s ease, border-color .25s ease;
+        }
+        .album-thumb:hover { transform: translateY(-3px); border-color: rgba(255,143,171,.5); }
+        .album-thumb img {
+            width: 100%; height: 100%; object-fit: cover; display: block;
+            filter: sepia(.12) contrast(1.05) saturate(1.05);
+        }
+        .album-thumb span {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 5px 8px 4px; font-size: .62rem; text-align: center;
+            font-family: 'Dancing Script', cursive; font-weight: 700; color: #fff;
+            background: linear-gradient(0deg, rgba(0,0,0,.65), transparent);
+        }
+
+        /* Lightbox saat satu foto album dibuka penuh */
+        #lightbox {
+            position: fixed; inset: 0; z-index: 950;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(4,3,12,.92);
+            opacity: 0; pointer-events: none; transition: opacity .35s ease;
+        }
+        #lightbox.open { opacity: 1; pointer-events: auto; }
+        #lightbox img {
+            max-width: min(86vw, 560px); max-height: 78vh; border-radius: 10px;
+            box-shadow: 0 30px 80px rgba(0,0,0,.6);
+            transform: scale(.94); transition: transform .35s ease;
+        }
+        #lightbox.open img { transform: scale(1); }
+        .lightbox-close, .lightbox-nav {
+            position: absolute; width: 42px; height: 42px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.08);
+            backdrop-filter: blur(8px); color: #ffd9e0; cursor: pointer; transition: .25s;
+        }
+        .lightbox-close:hover, .lightbox-nav:hover { background: rgba(255,143,171,.25); color: #fff; }
+        .lightbox-close { top: 22px; right: 22px; }
+        .lightbox-nav.prev { left: 16px; top: 50%; transform: translateY(-50%); }
+        .lightbox-nav.next { right: 16px; top: 50%; transform: translateY(-50%); }
+
         /* ============ 7. RESPONSIVE ============ */
         @media (max-width: 768px) {
             .center-content { width: 88%; height: 76vh; height: 74dvh; }
@@ -423,6 +534,12 @@
             .duck-container img { width: 48px; }
             .string { height: calc(var(--h, 26px) * .7); }
             .bola { width: 12px; height: 12px; }
+            #album-btn { top: 12px; right: 12px; padding: 8px 12px 8px 10px; font-size: 0; gap: 0; }
+            #album-btn i.fa-images { font-size: 1rem; }
+            #album-btn .album-count { margin-left: 2px; font-size: 0; min-width: 8px; height: 8px; }
+            #album-panel { width: 100vw; max-width: 100vw; }
+            .album-grid { grid-template-columns: repeat(3, 1fr); }
+            .lightbox-nav { width: 36px; height: 36px; }
         }
 
         @media (max-width: 480px) {
@@ -527,7 +644,7 @@
             </div>
         </div>
 
-        <!-- Bebek lucu (bisa diklik!) -->
+        <!-- Bebek (bisa diklik!) -->
         <div class="duck-container" id="duck">
             <span class="bubble" id="bubble">Kwek!</span>
             <img src="https://img.icons8.com/color/96/rubber-duck.png" alt="Bebek Lucu">
@@ -547,6 +664,32 @@
 
     <!-- Tombol musik -->
     <button id="music-btn" aria-label="Putar / Jeda Musik"><i class="fas fa-compact-disc"></i></button>
+
+    <!-- Tombol Album Foto (pojok kanan atas) -->
+    <button id="album-btn" aria-label="Buka album foto">
+        <i class="fas fa-images"></i>
+        <span class="btn-label">Album</span>
+        <span class="album-count" id="albumCount">0</span>
+    </button>
+
+    <!-- Panel Album Foto -->
+    <div id="album-overlay">
+        <div id="album-panel">
+            <div class="album-head">
+                <h2>Album Kenangan</h2>
+                <div class="album-close" id="albumClose" aria-label="Tutup album"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="album-grid" id="albumGrid"></div>
+        </div>
+    </div>
+
+    <!-- Lightbox (foto penuh dari album) -->
+    <div id="lightbox">
+        <div class="lightbox-close" id="lightboxClose"><i class="fas fa-times"></i></div>
+        <div class="lightbox-nav prev" id="lightboxPrev"><i class="fas fa-chevron-left"></i></div>
+        <img id="lightboxImg" src="" alt="Foto kenangan">
+        <div class="lightbox-nav next" id="lightboxNext"><i class="fas fa-chevron-right"></i></div>
+    </div>
 
     <!-- Layar Start -->
     <div id="start-overlay" onclick="startExperience()">
@@ -621,6 +764,8 @@
                 cap.textContent = captions[i % captions.length];
 
                 item.append(img, cap);
+                // Klik foto di dinding langsung buka lightbox album pada index yang sama
+                item.addEventListener('click', () => openLightbox(i));
                 wall.appendChild(item);
 
                 if (Math.random() > .45) addDecoration(z.x, z.y, item.style.zIndex);
@@ -694,6 +839,64 @@
         mbtn.addEventListener('click', () => {
             if (audio.paused) { audio.play().catch(()=>{}); mbtn.classList.add('playing'); }
             else { audio.pause(); mbtn.classList.remove('playing'); }
+        });
+
+        /* ================= ALBUM FOTO (pojok kanan atas) ================= */
+        const albumBtn     = document.getElementById('album-btn');
+        const albumOverlay = document.getElementById('album-overlay');
+        const albumGrid    = document.getElementById('albumGrid');
+        const albumClose   = document.getElementById('albumClose');
+        const albumCount   = document.getElementById('albumCount');
+
+        function buildAlbum(){
+            albumCount.textContent = photos.length;
+            photos.forEach((url, i) => {
+                const thumb = document.createElement('div');
+                thumb.className = 'album-thumb';
+                thumb.innerHTML = `<img src="${url}" alt="Kenangan ${i+1}" loading="lazy">
+                                    <span>${captions[i % captions.length]}</span>`;
+                thumb.addEventListener('click', () => openLightbox(i));
+                albumGrid.appendChild(thumb);
+            });
+        }
+
+        function openAlbum(){
+            albumOverlay.classList.add('open');
+        }
+        function closeAlbum(){
+            albumOverlay.classList.remove('open');
+        }
+        albumBtn.addEventListener('click', openAlbum);
+        albumClose.addEventListener('click', closeAlbum);
+        albumOverlay.addEventListener('click', e => { if (e.target === albumOverlay) closeAlbum(); });
+
+        /* ================= LIGHTBOX (foto penuh + navigasi) ================= */
+        const lightbox     = document.getElementById('lightbox');
+        const lightboxImg  = document.getElementById('lightboxImg');
+        const lightboxClose= document.getElementById('lightboxClose');
+        const lightboxPrev = document.getElementById('lightboxPrev');
+        const lightboxNext = document.getElementById('lightboxNext');
+        let currentPhoto = 0;
+
+        function openLightbox(i){
+            currentPhoto = i;
+            lightboxImg.src = photos[currentPhoto];
+            lightbox.classList.add('open');
+        }
+        function closeLightbox(){ lightbox.classList.remove('open'); }
+        function stepLightbox(dir){
+            currentPhoto = (currentPhoto + dir + photos.length) % photos.length;
+            lightboxImg.src = photos[currentPhoto];
+        }
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightboxPrev.addEventListener('click', () => stepLightbox(-1));
+        lightboxNext.addEventListener('click', () => stepLightbox(1));
+        lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+        addEventListener('keydown', e => {
+            if (!lightbox.classList.contains('open')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') stepLightbox(-1);
+            if (e.key === 'ArrowRight') stepLightbox(1);
         });
 
         /* ================= START ================= */
@@ -778,6 +981,7 @@
 
         /* ================= INIT ================= */
         createMemoryWall();
+        buildAlbum();
         updateScrollUI();
     </script>
 </body>
